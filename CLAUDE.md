@@ -1,37 +1,85 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、Claude Code (claude.ai/code) がこのリポジトリのコードを操作する際のガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
-This is a React Native mobile application built with Expo SDK 53. The project is currently in early development with a basic starter template structure.
+これはExpo SDK 53で構築されたReact Nativeモバイルアプリケーションです。プロジェクトは現在開発初期段階で、基本的なスターターテンプレート構造と、カスタムジョイスティックコンポーネントを含んでいます。
 
-## Development Commands
+## 開発コマンド
 
-- `npm start` - Start the Expo development server
-- `npm run android` - Start the app on Android simulator/device
-- `npm run ios` - Start the app on iOS simulator/device  
-- `npm run web` - Start the app in web browser
+- `npm start` - Expo開発サーバーを起動
+- `npm run android` - Androidシミュレーター/デバイスでアプリを起動
+- `npm run ios` - iOSシミュレーター/デバイスでアプリを起動
+- `npm run web` - Webブラウザでアプリを起動
 
-## Architecture
+## アーキテクチャ
 
-- **Entry Point**: `index.ts` registers the root component using Expo's `registerRootComponent`
-- **Main Component**: `App.tsx` contains the main application component with basic React Native structure
-- **Configuration**: 
-  - `app.json` - Expo configuration with app metadata and build settings
-  - `tsconfig.json` - TypeScript configuration extending Expo's base config with strict mode enabled
-  - New Architecture is enabled (`newArchEnabled: true` in app.json)
+- **エントリーポイント**: `index.ts` がExpoの `registerRootComponent` を使用してルートコンポーネントを登録
+- **メインコンポーネント**: `App.tsx` が基本的なReact Native構造を持つメインアプリケーションコンポーネントを含む
+- **設定ファイル**: 
+  - `app.json` - アプリのメタデータとビルド設定を含むExpo設定
+  - `tsconfig.json` - 厳密モードを有効にしたExpoのベース設定を拡張するTypeScript設定
+  - New Architectureが有効 (`app.json` 内の `newArchEnabled: true`)
 
-## Technology Stack
+## 技術スタック
 
-- **Framework**: React Native 0.79.4 with React 19.0.0
-- **Development Platform**: Expo ~53.0.12
-- **Language**: TypeScript with strict mode
-- **UI**: React Native components with StyleSheet
+- **フレームワーク**: React Native 0.79.4 with React 19.0.0
+- **開発プラットフォーム**: Expo ~53.0.12
+- **言語**: TypeScript（厳密モード）
+- **UI**: React Nativeコンポーネント + StyleSheet
+- **ジェスチャー処理**: react-native-gesture-handler
 
-## Project Structure
+## プロジェクト構造
 
-- Root-level app with main files at project root
-- `assets/` directory contains app icons and splash screens
-- Single `App.tsx` component currently displays placeholder text
-- Standard Expo project structure with minimal customization
+- ルートレベルアプリ（メインファイルはプロジェクトルートに配置）
+- `assets/` ディレクトリにアプリアイコンとスプラッシュスクリーンを格納
+- `component/joystick/` ディレクトリにカスタムジョイスティックコンポーネントを格納
+- 現在 `App.tsx` コンポーネントはプレースホルダーテキストを表示
+- 最小限のカスタマイズによる標準的なExpoプロジェクト構造
+
+## コンポーネント
+
+### ジョイスティックコンポーネント (`component/joystick/`)
+
+カスタマイズ可能なジョイスティックコンポーネントが実装されています：
+
+- **joy-stick.tsx** - メインのジョイスティックコンポーネント
+  - React Native Gesture Handlerを使用したタッチ操作
+  - カスタマイズ可能な色とサイズ
+  - リアルタイムの位置、角度、力の計算
+  - onStart、onMove、onStopコールバック対応
+
+- **types.ts** - TypeScriptインターフェース定義
+  - `IReactNativeJoystickEvent` - イベントデータの構造
+  - `IReactNativeJoystickProps` - コンポーネントプロパティの構造
+
+- **utils.ts** - 数学計算ユーティリティ関数
+  - 距離計算（ユークリッド距離）
+  - 角度計算（度/ラジアン変換）
+  - 座標計算（三角関数）
+
+### 使用例
+
+```typescript
+import { ReactNativeJoystick } from './component/joystick/joy-stick';
+
+<ReactNativeJoystick
+  radius={100}
+  color="#0066CC"
+  onMove={(event) => {
+    console.log('Position:', event.position);
+    console.log('Angle:', event.angle.degree);
+    console.log('Force:', event.force);
+  }}
+  onStart={(event) => console.log('Started')}
+  onStop={(event) => console.log('Stopped')}
+/>
+```
+
+## 開発ガイドライン
+
+- TypeScriptの厳密モードを使用
+- コンポーネントは日本語でコメント化
+- プラットフォーム固有の調整に注意（特にWeb対応）
+- ジェスチャー処理にはreact-native-gesture-handlerを使用
