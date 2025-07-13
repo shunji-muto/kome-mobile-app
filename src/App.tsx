@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { ReactNativeJoystick } from './component/joystick/joy-stick';
+import { ReactNativeJoystick } from './components/joystick/joy-stick';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
