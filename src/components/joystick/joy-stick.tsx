@@ -157,7 +157,8 @@ export const ReactNativeJoystick = ({
 					width: 2 * radius,
 					height: 2 * radius,
 					borderRadius: radius,
-					backgroundColor: `${color}55`, // 半透明の背景
+					// backgroundColor: `${color}55`, // 半透明の背景
+					backgroundColor: 'white', // 半透明の背景
 					transform: [{ rotateX: '180deg' }], // 期待される動作に合わせて反転
 					...(style && typeof style === 'object' ? style : {}),
 				},
