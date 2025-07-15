@@ -7,6 +7,7 @@ import Footer from './components/footer';
 import ButtonGroup from './components/button-group/button-group';
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
+import React from 'react';
 
 export default function App() {
 	// const [message, setMessage] = useState<string>()
