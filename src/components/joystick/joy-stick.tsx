@@ -53,8 +53,8 @@ export const ReactNativeJoystick = ({
 
 			// 指の位置とジョイスティック中心間の角度を計算
 			const angle = utils.calcAngle(
-				{ x: fingerX, y: fingerY },
 				{ x: wrapperRadius, y: wrapperRadius },
+				{ x: fingerX, y: fingerY },
 			);
 
 			// 中心からの距離を計算
@@ -66,7 +66,7 @@ export const ReactNativeJoystick = ({
 			// 距離とニップル直径の比率として力を計算
 			const force = dist / (nippleRadius * 2);
 
-			// ラッパーの境界内に移動を制限
+			// // ラッパーの境界内に移動を制限
 			dist = Math.min(dist, wrapperRadius);
 			if (dist === wrapperRadius) {
 				// 境界にある場合、エッジ上の位置を計算
@@ -157,8 +157,11 @@ export const ReactNativeJoystick = ({
 					width: 2 * radius,
 					height: 2 * radius,
 					borderRadius: radius,
-					// backgroundColor: `${color}55`, // 半透明の背景
-					backgroundColor: 'white', // 半透明の背景
+					backgroundColor: '#000000',
+					borderWidth: 2,
+					borderStyle: 'solid',
+					borderColor: `rgba(255, 255, 255, 0.2)`,
+					boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.3)',
 					transform: [{ rotateX: '180deg' }], // 期待される動作に合わせて反転
 					...(style && typeof style === 'object' ? style : {}),
 				},
@@ -166,7 +169,8 @@ export const ReactNativeJoystick = ({
 					height: 2 * nippleRadius,
 					width: 2 * nippleRadius,
 					borderRadius: nippleRadius,
-					backgroundColor: `${color}bb`, // ラッパーよりも不透明
+					// backgroundColor: `${color}bb`, // ラッパーよりも不透明
+					backgroundColor: 'white', // ラッパーよりも不透明
 					position: 'absolute',
 					transform: [
 						{
@@ -174,6 +178,22 @@ export const ReactNativeJoystick = ({
 						},
 						{ translateY: y }, // 動的なY位置
 					],
+				},
+				directionIndicator: {
+					position: 'absolute',
+					width: 4,
+					height: 4,
+					backgroundColor: 'rgba(255, 255, 255, 0.4)',
+					// borderRadius: '50%',
+				},
+				indicatorTop: { top: 15, left: '50%' },
+				indicatorBottom: { bottom: 15, left: '50%' },
+				indicatorLeft: { left: 15, top: '50%' },
+				indicatorRight: { right: 15, top: '50%' },
+				buttonControls: {
+					position: 'relative',
+					width: 200,
+					height: 200,
 				},
 			}),
 		[radius, color, nippleRadius, x, y],
@@ -183,6 +203,10 @@ export const ReactNativeJoystick = ({
 	return (
 		<GestureDetector gesture={panGesture}>
 			<View style={styles.wrapper} {...props}>
+				<View style={{ ...styles.directionIndicator, ...styles.indicatorTop }} />
+				<View style={{ ...styles.directionIndicator, ...styles.indicatorBottom }} />
+				<View style={{ ...styles.directionIndicator, ...styles.indicatorLeft }} />
+				<View style={{ ...styles.directionIndicator, ...styles.indicatorRight }} />
 				<View pointerEvents="none" style={styles.nipple} />
 			</View>
 		</GestureDetector>
