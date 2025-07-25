@@ -31,6 +31,8 @@ export const ReactNativeJoystick = ({
 	const nippleRadius = wrapperRadius / 3;
 
 	// ニップルの位置を追跡するためのstate (x, y座標)
+	// const [x, setX] = useState(0);
+	// const [y, setY] = useState(0);
 	const [x, setX] = useState(wrapperRadius - nippleRadius);
 	const [y, setY] = useState(wrapperRadius - nippleRadius);
 
@@ -41,9 +43,13 @@ export const ReactNativeJoystick = ({
 	const handleTouchMove = useCallback(
 		(event: GestureTouchEvent) => {
 			const e = event.changedTouches[0];
-			const fingerX = e.x;
+
+			// e.x が0以上、直径以下になるように制限（joystick範囲内に制限）
+			const fingerX = e.x < 0 ? 0 : e.x > wrapperRadius * 2 ? wrapperRadius * 2 : e.x;
+			// e.y が0以上、直径以下になるように制限（joystick範囲内に制限）
 			// Y座標のプラットフォーム差異をユーティリティで正規化
-			const fingerY = utils.normalizeTouchYForPlatform(e.y, wrapperRadius, Platform.OS);
+			// const y = utils.normalizeTouchYForPlatform(e.y, wrapperRadius, Platform.OS);
+			const fingerY = e.y < 0 ? 0 : e.y > wrapperRadius * 2 ? wrapperRadius * 2 : e.y;
 
 			// ニップル位置に対する初期座標を計算
 			let coordinates = {
@@ -63,10 +69,7 @@ export const ReactNativeJoystick = ({
 				{ x: fingerX, y: fingerY },
 			);
 
-			// 距離とニップル直径の比率として力を計算
-			const force = dist / (nippleRadius * 2);
-
-			// // ラッパーの境界内に移動を制限
+			// ラッパーの境界内に移動を制限
 			dist = Math.min(dist, wrapperRadius);
 			if (dist === wrapperRadius) {
 				// 境界にある場合、エッジ上の位置を計算
@@ -77,6 +80,9 @@ export const ReactNativeJoystick = ({
 				};
 			}
 
+			// 力を0~1の間で算出
+			const force = dist / wrapperRadius;
+
 			// ニップルの位置を更新
 			setX(coordinates.x);
 			setY(coordinates.y);
@@ -84,7 +90,10 @@ export const ReactNativeJoystick = ({
 			// 計算された値でonMoveコールバックを実行
 			onMove &&
 				onMove({
-					position: coordinates,
+					position: {
+						x: coordinates.x,
+						y: coordinates.y,
+					},
 					angle: {
 						radian: utils.degreesToRadians(angle),
 						degree: angle,

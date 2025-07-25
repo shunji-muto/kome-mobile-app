@@ -46,7 +46,8 @@ export const degreesToRadians = (a: number) => {
  * @returns 度単位の角度
  */
 export const radiansToDegrees = (a: number) => {
-	return a * (180 / Math.PI);
+	return 90 - (a * 180) / Math.PI;
+	// return a * (180 / Math.PI);
 };
 
 /**
@@ -64,8 +65,8 @@ export const findCoord = (position: { x: number; y: number }, distance: number, 
 	angle = degreesToRadians(angle);
 
 	// 三角関数を使用して新しい位置を計算
-	b.x = position.x + distance * Math.cos(angle);
-	b.y = position.y + distance * Math.sin(angle);
+	b.x = position.x + distance * Math.sin(angle);
+	b.y = position.y + distance * Math.cos(angle);
 
 	// 負のY値のエッジケースを処理（プラットフォーム固有の調整）
 	if (b.y < 0) b.y += 150;
