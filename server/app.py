@@ -33,12 +33,14 @@ def handle_message(msg):
     # time.sleep(1)
 @socketio.on('Muto')
 def control_muto(data):
-    print(data['left'])
-    print(data['right'])
-    # robot.Ctrl_Muto(0,50)
-    # robot.Ctrl_Muto(1,50)
-    # robot.Ctrl_Muto(2,50)
-    # robot.Ctrl_Muto(3,50)
+    # left front
+    robot.Ctrl_Muto(0,data[leftPower])
+    # right front
+    robot.Ctrl_Muto(1,data[rightPower])
+    # left back
+    robot.Ctrl_Muto(2,data[leftPower])
+    # right back
+    robot.Ctrl_Muto(3,data[rightPower])
     
 
 
