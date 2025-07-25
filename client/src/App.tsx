@@ -37,10 +37,28 @@ export default function App() {
 
 	// ジョイスティックのonMoveイベント用ハンドラー
 	const handleJoystickMove = (event: IReactNativeJoystickEvent) => {
+		const d = event.angle.degree;
+		const f = 50 * event.force;
+		let left = 0;
+		let right = 0;
+		if (0 <= d && d <= 90) {
+			left = 1;
+			right = 1 - (2 * d) / 90;
+		} else if (90 < d && d <= 180) {
+			left = 1 - (2 * (d - 90)) / 90;
+			right = -1;
+		} else if (180 < d && d <= 270) {
+			left = -1;
+			left = 2 * ((d - 180) / 90) - 1;
+		} else if (270 < d && d <= 359) {
+			left = 2 * ((d - 270) / 90) - 1;
+			right = 1;
+		}
+		socketRef.current?.emit('Muto', { leftPower: left * f, rightPower: right * f });
+
 		// 必要に応じてイベントデータを処理
-		Vibration.vibrate(400);
-		socketRef.current?.send('beep');
-		console.log('Joystick Event:', event);
+		// socketRef.current?.send('beep');
+		// console.log('Joystick Event:', event.angle.degree);
 		// console.log('beep');
 	};
 
